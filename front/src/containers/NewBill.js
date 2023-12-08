@@ -24,7 +24,8 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
-
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i
+    allowedExtensions.exec(fileName) ?
     this.store
       .bills()
       .create({
@@ -38,7 +39,7 @@ export default class NewBill {
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
-      }).catch(error => console.error(error))
+      }).catch(error => console.error(error)) : null
   }
   handleSubmit = e => {
     e.preventDefault()
