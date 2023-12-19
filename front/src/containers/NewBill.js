@@ -17,6 +17,7 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
+    const file1 = document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
@@ -25,7 +26,12 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i
-    allowedExtensions.exec(fileName) ?
+    const inputFile = document.querySelector('[data-testid=file]')
+    console.log(file)
+    
+    if(allowedExtensions.exec(fileName)) {
+    const p = document.querySelector('.col-half p')
+    p.remove()
     this.store
       .bills()
       .create({
@@ -39,7 +45,21 @@ export default class NewBill {
         this.billId = key
         this.fileUrl = fileUrl
         this.fileName = fileName
-      }).catch(error => console.error(error)) : null
+      }).catch(error => console.error(error)) 
+    } else {
+        inputFile.value = ''
+        if(!document.querySelector('.col-half p')) {
+            const p = document.createElement("p")
+            p.setAttribute("data-testid", "msg-error-ext")
+            p.setAttribute("id", "ext")
+            p.textContent = 'Votre fichier a pas la bonne extension !',
+            p.style.color = 'red'
+            inputFile.after(p)
+          } else {
+              
+            }
+    }
+        
   }
   handleSubmit = e => {
     e.preventDefault()
